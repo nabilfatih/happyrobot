@@ -147,9 +147,9 @@ function Dashboard() {
               Production-ready demo
             </Badge>
           </div>
-          <div className="grid gap-3 md:grid-cols-4">
+          <div className="grid min-w-0 gap-3 md:grid-cols-4">
             {metrics.map((metric) => (
-              <Card key={metric.label} className="rounded-lg">
+              <Card key={metric.label} className="min-w-0 rounded-lg">
                 <CardHeader className="gap-3 p-4">
                   <div className="flex items-center justify-between gap-3">
                     <CardDescription>{metric.label}</CardDescription>
@@ -166,8 +166,8 @@ function Dashboard() {
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-7xl gap-5 px-5 py-6 sm:px-8 lg:grid-cols-[1.1fr_0.9fr]">
-        <Card className="rounded-lg">
+      <section className="mx-auto grid max-w-7xl min-w-0 gap-5 px-5 py-6 sm:px-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+        <Card className="min-w-0 rounded-lg">
           <CardHeader>
             <CardTitle>Outcome distribution</CardTitle>
             <CardDescription>
@@ -176,7 +176,7 @@ function Dashboard() {
           </CardHeader>
           <CardPanel>
             <EvilBarChart
-              className="h-72"
+              className="h-72 aspect-auto"
               config={outcomeChartConfig}
               data={outcomeData}
               animationType="none"
@@ -190,14 +190,14 @@ function Dashboard() {
           </CardPanel>
         </Card>
 
-        <Card className="rounded-lg">
+        <Card className="min-w-0 rounded-lg">
           <CardHeader>
             <CardTitle>Daily conversion</CardTitle>
             <CardDescription>Calls and booked outcomes by day.</CardDescription>
           </CardHeader>
           <CardPanel>
             <EvilLineChart
-              className="h-72"
+              className="h-72 aspect-auto"
               config={conversionChartConfig}
               data={[...report.dailyConversion]}
               animationType="none"
@@ -213,8 +213,8 @@ function Dashboard() {
         </Card>
       </section>
 
-      <section className="mx-auto grid max-w-7xl gap-5 px-5 pb-10 sm:px-8 lg:grid-cols-[1fr_360px]">
-        <Card className="rounded-lg">
+      <section className="mx-auto grid max-w-7xl min-w-0 gap-5 px-5 pb-10 sm:px-8 lg:grid-cols-[minmax(0,1fr)_360px]">
+        <Card className="min-w-0 rounded-lg">
           <CardHeader>
             <CardTitle>Recent calls</CardTitle>
             <CardDescription>
@@ -255,8 +255,8 @@ function Dashboard() {
           </CardPanel>
         </Card>
 
-        <aside className="space-y-5">
-          <Card className="rounded-lg">
+        <aside className="min-w-0 space-y-5">
+          <Card className="min-w-0 rounded-lg">
             <CardHeader>
               <CardTitle>Sales health</CardTitle>
               <CardDescription>
@@ -283,7 +283,7 @@ function Dashboard() {
             </CardPanel>
           </Card>
 
-          <Card className="rounded-lg">
+          <Card className="min-w-0 rounded-lg">
             <CardHeader>
               <CardTitle>Recent offers</CardTitle>
               <CardDescription>
