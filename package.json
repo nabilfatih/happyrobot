@@ -5,6 +5,7 @@
   "type": "module",
   "imports": {
     "#/data/loads.json": "./src/data/loads.json",
+    "#/styles.css": "./src/styles.css",
     "#/*": "./src/*.ts",
     "#confect/*": "./confect/*.ts",
     "#convex/*": "./convex/*.ts"
