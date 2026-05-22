@@ -4,7 +4,7 @@ WORKDIR /app
 ENV CI=1
 
 RUN apt-get update \
-  && apt-get install -y --no-install-recommends ca-certificates g++ make python3 \
+  && apt-get install -y --no-install-recommends ca-certificates \
   && rm -rf /var/lib/apt/lists/*
 
 RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
@@ -18,7 +18,6 @@ RUN pnpm build
 FROM node:22-bookworm-slim AS runtime
 
 WORKDIR /app
-ENV DATABASE_PATH=/data/acme-logistics.sqlite
 ENV HOST=0.0.0.0
 ENV NODE_ENV=production
 ENV PORT=3000
@@ -26,8 +25,7 @@ ENV PORT=3000
 RUN apt-get update \
   && apt-get install -y --no-install-recommends ca-certificates \
   && rm -rf /var/lib/apt/lists/* \
-  && mkdir -p /data \
-  && chown -R node:node /app /data
+  && chown -R node:node /app
 
 COPY --from=build --chown=node:node /app/.output ./.output
 

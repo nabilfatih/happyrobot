@@ -199,7 +199,7 @@ function Dashboard() {
             <EvilLineChart
               className="h-72"
               config={conversionChartConfig}
-              data={report.dailyConversion}
+              data={[...report.dailyConversion]}
               animationType="none"
             >
               <LineGrid />

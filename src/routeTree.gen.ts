@@ -9,12 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as HealthRouteImport } from './routes/health'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiCallsRouteImport } from './routes/api/calls'
 import { Route as ApiOffersEvaluateRouteImport } from './routes/api/offers/evaluate'
 import { Route as ApiLoadsSearchRouteImport } from './routes/api/loads/search'
 import { Route as ApiCarriersVerifyRouteImport } from './routes/api/carriers/verify'
 
+const HealthRoute = HealthRouteImport.update({
+  id: '/health',
+  path: '/health',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -43,6 +49,7 @@ const ApiCarriersVerifyRoute = ApiCarriersVerifyRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/health': typeof HealthRoute
   '/api/calls': typeof ApiCallsRoute
   '/api/carriers/verify': typeof ApiCarriersVerifyRoute
   '/api/loads/search': typeof ApiLoadsSearchRoute
@@ -50,6 +57,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/health': typeof HealthRoute
   '/api/calls': typeof ApiCallsRoute
   '/api/carriers/verify': typeof ApiCarriersVerifyRoute
   '/api/loads/search': typeof ApiLoadsSearchRoute
@@ -58,6 +66,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/health': typeof HealthRoute
   '/api/calls': typeof ApiCallsRoute
   '/api/carriers/verify': typeof ApiCarriersVerifyRoute
   '/api/loads/search': typeof ApiLoadsSearchRoute
@@ -67,6 +76,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/health'
     | '/api/calls'
     | '/api/carriers/verify'
     | '/api/loads/search'
@@ -74,6 +84,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/health'
     | '/api/calls'
     | '/api/carriers/verify'
     | '/api/loads/search'
@@ -81,6 +92,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/health'
     | '/api/calls'
     | '/api/carriers/verify'
     | '/api/loads/search'
@@ -89,6 +101,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  HealthRoute: typeof HealthRoute
   ApiCallsRoute: typeof ApiCallsRoute
   ApiCarriersVerifyRoute: typeof ApiCarriersVerifyRoute
   ApiLoadsSearchRoute: typeof ApiLoadsSearchRoute
@@ -97,6 +110,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/health': {
+      id: '/health'
+      path: '/health'
+      fullPath: '/health'
+      preLoaderRoute: typeof HealthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -137,6 +157,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  HealthRoute: HealthRoute,
   ApiCallsRoute: ApiCallsRoute,
   ApiCarriersVerifyRoute: ApiCarriersVerifyRoute,
   ApiLoadsSearchRoute: ApiLoadsSearchRoute,

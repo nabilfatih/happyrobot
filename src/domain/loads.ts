@@ -9,7 +9,12 @@ export const loads = Schema.decodeUnknownSync(LoadList)(loadsJson);
 
 /** Finds a load by its stable load id. */
 export function findLoad(loadId: string) {
-  return loads.find((load) => load.load_id === loadId);
+  return findLoadIn(loads, loadId);
+}
+
+/** Finds a load by id in a caller-provided load collection. */
+export function findLoadIn(records: ReadonlyArray<LoadType>, loadId: string) {
+  return records.find((load) => load.load_id === loadId);
 }
 
 /** Returns a load or fails with a clear not-found error. */
@@ -25,7 +30,15 @@ export function requireLoad(loadId: string) {
 
 /** Searches seeded loads with simple lane, equipment, pickup, and weight scoring. */
 export function searchLoads(input: LoadSearchRequest) {
-  const rankedLoads = loads
+  return searchLoadRecords(loads, input);
+}
+
+/** Searches provided loads with simple lane, equipment, pickup, and weight scoring. */
+export function searchLoadRecords(
+  records: ReadonlyArray<LoadType>,
+  input: LoadSearchRequest,
+) {
+  const rankedLoads = records
     .map((load) => ({ load, score: scoreLoad(load, input) }))
     .filter((entry) => entry.score > 0 || hasNoSearchConstraint(input))
     .sort((left, right) => right.score - left.score)

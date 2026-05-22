@@ -1,8 +1,6 @@
 import { Effect } from "effect";
 import { ConfigError } from "./errors";
 
-const localDatabasePath = "data/acme-logistics.sqlite";
-
 /** Reads a required secret from the server process environment. */
 export function readRequiredEnv(name: string) {
   const value = process.env[name];
@@ -14,11 +12,6 @@ export function readRequiredEnv(name: string) {
   }
 
   return Effect.succeed(value);
-}
-
-/** Resolves the SQLite path used by local, Docker, and Fly.io runs. */
-export function readDatabasePath() {
-  return process.env.DATABASE_PATH ?? localDatabasePath;
 }
 
 /** Compares secrets without leaking early mismatch timing for equal lengths. */

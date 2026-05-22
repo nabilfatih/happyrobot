@@ -6,8 +6,7 @@ import {
 } from "@tanstack/react-start/server";
 import { Effect } from "effect";
 import { readRequiredEnv, secretsMatch } from "@/domain/config";
-import { buildDashboardReport } from "@/domain/metrics";
-import { readRecentCalls, readRecentOfferEvents } from "./database";
+import { readDashboardReport } from "./backend";
 import { checkRateLimit, requestRateLimitKey } from "./rate-limit";
 import { securityHeaders } from "./security-headers";
 
@@ -66,7 +65,7 @@ function loadDashboardData() {
 
     return {
       authorized: true as const,
-      report: buildDashboardReport(readRecentCalls(), readRecentOfferEvents()),
+      report: yield* readDashboardReport(),
     };
   }).pipe(
     Effect.catchAll((error) =>

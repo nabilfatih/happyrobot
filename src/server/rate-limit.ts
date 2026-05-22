@@ -33,9 +33,7 @@ export function checkRateLimit(key: string, limit: number, windowMs: number) {
 /** Builds a stable rate-limit key from the nearest proxy-provided client IP. */
 export function requestRateLimitKey(request: Request, surface: string) {
   const forwardedFor = request.headers.get("x-forwarded-for");
-  const flyClientIp = request.headers.get("fly-client-ip");
-  const clientIp =
-    flyClientIp ?? forwardedFor?.split(",")[0]?.trim() ?? "unknown";
+  const clientIp = forwardedFor?.split(",")[0]?.trim() ?? "unknown";
 
   return `${surface}:${clientIp}`;
 }

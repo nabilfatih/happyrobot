@@ -8,5 +8,6 @@
    pitch, counteroffer, acceptance, and the mock transfer line.
 4. Dashboard metrics: show total calls, eligible rate, matched loads, agreement
    rate, outcome chart, conversion chart, recent calls, and offer history.
-5. Deployment and security: show Fly.io URL, Docker/Fly config, persistent
-   SQLite volume, server-only secrets, API key auth, and dashboard Basic auth.
+5. Deployment and security: show Railway URL, Docker/Railway config,
+   Convex/Confect backend, server-only secrets, API key auth, and dashboard
+   Basic auth.

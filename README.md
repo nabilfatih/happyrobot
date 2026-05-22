@@ -1,39 +1,46 @@
 # Acme Logistics Carrier Sales
 
 TanStack Start app for the HappyRobot FDE take-home. It exposes the public
-HappyRobot tool/webhook API, stores carrier sales activity in SQLite, and serves
-a basic-auth protected operations dashboard.
+HappyRobot tool/webhook API, serves the basic-auth dashboard, and uses
+Convex/Confect for app-owned carrier, load, offer, call, and dashboard state.
 
 ## Stack
 
 - TanStack Start with React file routes and server routes
-- Effect Schema and Effect programs for validation, errors, and async boundaries
-- SQLite through `better-sqlite3`
+- Convex backend generated and implemented through Confect
+- Effect Schema and Effect programs for validation, typed errors, and async work
 - Tailwind v4, COSS UI, EvilCharts
-- Vitest, Playwright, Docker, Fly.io
+- Vitest, Playwright, Docker, Railway
 
 ## Local Setup
 
 ```bash
 pnpm install
+pnpm confect:codegen
 cp .env.example .env.local
+pnpm convex:dev
 pnpm dev
 ```
 
-Required server-only variables:
+Railway/server env:
 
 - `HAPPYROBOT_API_KEY`
-- `FMCSA_WEB_KEY`
 - `DASHBOARD_BASIC_USER`
 - `DASHBOARD_BASIC_PASSWORD`
-- `DATABASE_PATH`
+- `CONVEX_URL`
+- `CONVEX_BACKEND_KEY`
+
+Convex env:
+
+- `FMCSA_WEB_KEY`
+- `CONVEX_BACKEND_KEY`
 
 ## Scripts
 
 ```bash
 pnpm test
 pnpm typecheck
-pnpm lint
+pnpm check
 pnpm build
 pnpm verify:dashboard
 ```
@@ -45,6 +52,7 @@ screenshots to `.screenshots/`.
 
 All HappyRobot-facing endpoints require `x-api-key: HAPPYROBOT_API_KEY`.
 
+- `GET /health`
 - `POST /api/carriers/verify`
 - `POST /api/loads/search`
 - `POST /api/offers/evaluate`
@@ -52,25 +60,12 @@ All HappyRobot-facing endpoints require `x-api-key: HAPPYROBOT_API_KEY`.
 
 The dashboard is served at `/` and protected by HTTP Basic auth.
 
-## Docker
+## Docker And Railway
 
 ```bash
 docker build -t acme-logistics .
-docker run --rm -p 3000:3000 \
-  --env-file .env.local \
-  -v acme-logistics-data:/data \
-  acme-logistics
+docker run --rm -p 3000:3000 --env-file .env.local acme-logistics
 ```
 
-## Fly.io
-
-```bash
-fly launch --no-deploy
-fly volumes create acme_data --size 1 --region iad
-fly secrets set \
-  HAPPYROBOT_API_KEY=... \
-  FMCSA_WEB_KEY=... \
-  DASHBOARD_BASIC_USER=... \
-  DASHBOARD_BASIC_PASSWORD=...
-fly deploy
-```
+Railway uses `railway.json`, the committed Dockerfile, and `/health` for
+deployment health checks.

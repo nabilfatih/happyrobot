@@ -1,20 +1,13 @@
 import { Effect, Schema } from "effect";
-import {
-  describeCarrierStatus,
-  fetchCarrierFromFmcsa,
-  requireMcNumber,
-} from "@/domain/carriers";
 import { readRequiredEnv, secretsMatch } from "@/domain/config";
 import {
   AuthError,
   type ConfigError,
   type ExternalServiceError,
-  NotFoundError,
+  type NotFoundError,
   type RateLimitError,
   ValidationError,
 } from "@/domain/errors";
-import { searchLoads, summarizeLoad } from "@/domain/loads";
-import { evaluateOffer, explainOfferDecision } from "@/domain/offers";
 import {
   CallIngestRequest,
   LoadSearchRequest,
@@ -22,11 +15,11 @@ import {
   VerifyCarrierRequest,
 } from "@/domain/schemas";
 import {
-  findCachedCarrier,
-  recordCall,
-  recordOfferEvent,
-  saveCachedCarrier,
-} from "./database";
+  evaluateOffer,
+  ingestCall,
+  searchLoads,
+  verifyCarrier,
+} from "./backend";
 import { checkRateLimit, requestRateLimitKey } from "./rate-limit";
 import { securityHeaders } from "./security-headers";
 
@@ -57,26 +50,8 @@ export function verifyCarrierProgram(request: Request) {
       yield* Schema.decodeUnknown(VerifyCarrierRequest)(body).pipe(
         mapParseError,
       );
-    const mcNumber = yield* requireMcNumber(input.mcNumber);
-    const cached = yield* Effect.sync(() => findCachedCarrier(mcNumber));
 
-    if (cached) {
-      return {
-        cacheHit: true,
-        carrier: cached,
-        message: describeCarrierStatus(cached),
-      };
-    }
-
-    const webKey = yield* readRequiredEnv("FMCSA_WEB_KEY");
-    const carrier = yield* fetchCarrierFromFmcsa(mcNumber, webKey);
-    yield* Effect.sync(() => saveCachedCarrier(carrier));
-
-    return {
-      cacheHit: false,
-      carrier,
-      message: describeCarrierStatus(carrier),
-    };
+    return yield* verifyCarrier(input);
   });
 }
 
@@ -87,22 +62,8 @@ export function searchLoadsProgram(request: Request) {
     const body = yield* readJson(request);
     const input =
       yield* Schema.decodeUnknown(LoadSearchRequest)(body).pipe(mapParseError);
-    const result = searchLoads(input);
 
-    if (!result.selected) {
-      return {
-        alternatives: [],
-        matched: false,
-        selected: null,
-      };
-    }
-
-    return {
-      alternatives: result.alternatives,
-      matched: true,
-      pitch: summarizeLoad(result.selected),
-      selected: result.selected,
-    };
+    return yield* searchLoads(input);
   });
 }
 
@@ -115,32 +76,8 @@ export function evaluateOfferProgram(request: Request) {
       yield* Schema.decodeUnknown(OfferEvaluateRequest)(body).pipe(
         mapParseError,
       );
-    const mcNumber = yield* requireMcNumber(input.mcNumber);
-    const result = yield* Effect.try({
-      try: () => evaluateOffer(input.loadId, input.proposedRate, input.turn),
-      catch: (error) =>
-        error instanceof NotFoundError
-          ? error
-          : new ValidationError({ message: "Offer could not be evaluated." }),
-    });
 
-    const event = yield* Effect.sync(() =>
-      recordOfferEvent({
-        acceptedRate: result.acceptedRate,
-        counterRate: result.counterRate,
-        decision: result.decision,
-        loadId: input.loadId,
-        mcNumber,
-        proposedRate: input.proposedRate,
-        turn: input.turn,
-      }),
-    );
-
-    return {
-      ...result,
-      eventId: event.id,
-      message: explainOfferDecision(result),
-    };
+    return yield* evaluateOffer(input);
   });
 }
 
@@ -151,12 +88,8 @@ export function ingestCallProgram(request: Request) {
     const body = yield* readJson(request);
     const input =
       yield* Schema.decodeUnknown(CallIngestRequest)(body).pipe(mapParseError);
-    const call = yield* Effect.sync(() => recordCall(input));
 
-    return {
-      callId: call.id,
-      stored: true,
-    };
+    return yield* ingestCall(input);
   });
 }
 

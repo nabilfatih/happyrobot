@@ -1,6 +1,6 @@
 import { NotFoundError } from "./errors";
 import { findLoad } from "./loads";
-import type { OfferDecision } from "./schemas";
+import type { Load, OfferDecision } from "./schemas";
 
 const maxNegotiationTurns = 3;
 const targetPremium = 1.08;
@@ -23,6 +23,15 @@ export function evaluateOffer(
     throw new NotFoundError({ message: `Load ${loadId} was not found.` });
   }
 
+  return evaluateLoadOffer(load, proposedRate, turn);
+}
+
+/** Evaluates a carrier counteroffer against a caller-provided load record. */
+export function evaluateLoadOffer(
+  load: Load,
+  proposedRate: number,
+  turn: number,
+) {
   const maxRate = roundTo25(load.loadboard_rate * targetPremium);
   const unrealisticRate = roundTo25(load.loadboard_rate * unrealisticPremium);
 
@@ -38,7 +47,9 @@ export function evaluateOffer(
 }
 
 /** Builds the short explanation returned to HappyRobot after each negotiation turn. */
-export function explainOfferDecision(result: ReturnType<typeof evaluateOffer>) {
+export function explainOfferDecision(
+  result: ReturnType<typeof evaluateLoadOffer>,
+) {
   if (result.decision === "accept") {
     return `Accepted at $${result.acceptedRate?.toLocaleString()}. Transfer was successful and now you can wrap up the conversation.`;
   }
