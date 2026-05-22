@@ -15,10 +15,14 @@ import {
 
 /** Decodes canonical or HappyRobot-shaped offer payloads into app input. */
 export function decodeOfferEvaluateBody(body: unknown) {
-  return Schema.decodeUnknown(OfferEvaluateRequest)(body).pipe(
-    Effect.orElse(() =>
-      Schema.decodeUnknown(HappyRobotOfferEvaluateRequest)(body).pipe(
-        Effect.flatMap(normalizeHappyRobotOffer),
+  return decodeMaybeJsonString(body).pipe(
+    Effect.flatMap((payload) =>
+      Schema.decodeUnknown(OfferEvaluateRequest)(payload).pipe(
+        Effect.orElse(() =>
+          Schema.decodeUnknown(HappyRobotOfferEvaluateRequest)(payload).pipe(
+            Effect.flatMap(normalizeHappyRobotOffer),
+          ),
+        ),
       ),
     ),
     mapPayloadError,
@@ -27,14 +31,26 @@ export function decodeOfferEvaluateBody(body: unknown) {
 
 /** Decodes canonical or HappyRobot-shaped call payloads into app input. */
 export function decodeCallIngestBody(body: unknown) {
-  return Schema.decodeUnknown(CallIngestRequest)(body).pipe(
-    Effect.orElse(() =>
-      Schema.decodeUnknown(HappyRobotCallIngestRequest)(body).pipe(
-        Effect.flatMap(normalizeHappyRobotCall),
+  return decodeMaybeJsonString(body).pipe(
+    Effect.flatMap((payload) =>
+      Schema.decodeUnknown(CallIngestRequest)(payload).pipe(
+        Effect.orElse(() =>
+          Schema.decodeUnknown(HappyRobotCallIngestRequest)(payload).pipe(
+            Effect.flatMap(normalizeHappyRobotCall),
+          ),
+        ),
       ),
     ),
     mapPayloadError,
   );
+}
+
+function decodeMaybeJsonString(body: unknown) {
+  if (typeof body !== "string") {
+    return Effect.succeed(body);
+  }
+
+  return Schema.decodeUnknown(Schema.parseJson())(body);
 }
 
 function normalizeHappyRobotOffer(input: HappyRobotOfferEvaluateInput) {
@@ -109,7 +125,7 @@ function callSummary(input: HappyRobotCallIngestInput) {
     return declineReason;
   }
 
-  const transcript = cleanText(input.transcript);
+  const transcript = transcriptText(input.transcript);
 
   if (transcript) {
     return transcript.slice(0, 240);
@@ -118,7 +134,7 @@ function callSummary(input: HappyRobotCallIngestInput) {
   return "HappyRobot call completed.";
 }
 
-function normalizeOutcome(value: string | undefined): Outcome {
+function normalizeOutcome(value: unknown): Outcome {
   const label = normalizedLabel(value);
 
   if (!label) {
@@ -152,7 +168,7 @@ function normalizeOutcome(value: string | undefined): Outcome {
   return "incomplete";
 }
 
-function normalizeSentiment(value: string | undefined): Sentiment {
+function normalizeSentiment(value: unknown): Sentiment {
   const label = normalizedLabel(value);
 
   if (label.includes("positive")) {
@@ -170,7 +186,7 @@ function normalizeSentiment(value: string | undefined): Sentiment {
   return "neutral";
 }
 
-function normalizedLabel(value: string | undefined) {
+function normalizedLabel(value: unknown) {
   return (
     cleanText(value)
       ?.toLowerCase()
@@ -178,8 +194,40 @@ function normalizedLabel(value: string | undefined) {
   );
 }
 
-function cleanText(value: string | undefined) {
-  const trimmed = value?.trim();
+function transcriptText(value: unknown) {
+  const directText = cleanText(value);
+
+  if (directText) {
+    return directText;
+  }
+
+  if (!Array.isArray(value)) {
+    return undefined;
+  }
+
+  const text = value.map(transcriptEntryText).filter(Boolean).join(" ");
+
+  return cleanText(text);
+}
+
+function transcriptEntryText(value: unknown) {
+  if (!value || typeof value !== "object" || !("content" in value)) {
+    return undefined;
+  }
+
+  return cleanText(value.content);
+}
+
+function cleanText(value: unknown) {
+  if (typeof value === "number" || typeof value === "boolean") {
+    return String(value);
+  }
+
+  if (typeof value !== "string") {
+    return undefined;
+  }
+
+  const trimmed = value.trim();
 
   if (!trimmed) {
     return undefined;

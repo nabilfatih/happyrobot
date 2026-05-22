@@ -211,6 +211,46 @@ describe("HappyRobot API handlers", () => {
     });
   });
 
+  it("normalizes HappyRobot call webhooks sent as JSON strings", async () => {
+    vi.mocked(ingestCall).mockReturnValue(
+      Effect.succeed({ callId: "call-id", stored: true }),
+    );
+
+    const response = await runApi(
+      ingestCallProgram(
+        jsonRequest(
+          "/api/calls",
+          JSON.stringify({
+            booking_decision: "yes",
+            classification: "no_agreement",
+            decline_reason: "",
+            duration: "146",
+            mc_number: "42027",
+            transcript: [
+              { content: "Carrier countered at 2600.", role: "user" },
+            ],
+          }),
+          apiKey,
+        ),
+      ),
+    );
+
+    expect(response.status).toBe(200);
+    expect(ingestCall).toHaveBeenCalledWith({
+      agreedRate: undefined,
+      carrierName: undefined,
+      loadId: undefined,
+      loadboardRate: undefined,
+      mcNumber: "42027",
+      negotiationTurns: 0,
+      offers: [],
+      outcome: "no_agreement",
+      sentiment: "neutral",
+      summary: "Carrier countered at 2600.",
+      transferMocked: false,
+    });
+  });
+
   it("returns offer evaluations from Convex", async () => {
     vi.mocked(evaluateOffer).mockReturnValue(
       Effect.succeed({
