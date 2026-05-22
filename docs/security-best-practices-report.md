@@ -5,8 +5,9 @@
 No critical or high-severity issues are open in the app-owned code after the
 Convex/Confect migration. The app keeps secrets server-side, validates
 untrusted payloads with Effect Schema, protects HappyRobot endpoints with
-API-key auth, protects the dashboard with Basic auth, protects Convex public
-functions with a server-only backend key, and ships a non-root Docker runtime.
+API-key auth, protects the dashboard with Basic auth, protects Convex backend
+functions with a server-only backend key, gates the browser live dashboard query
+with a separate realtime token, and ships a non-root Docker runtime.
 
 ## Critical Findings
 
@@ -51,6 +52,7 @@ None.
 - Confect typed backend errors: `confect/errors.ts`
 - Convex table schemas from Effect schemas: `confect/schema.ts`
 - Dashboard Basic auth: `src/server/dashboard.ts`
+- Dashboard realtime token gate: `confect/dashboard.impl.ts`
 - Docker non-root runtime: `Dockerfile`
 - Railway healthcheck config: `railway.json`
 

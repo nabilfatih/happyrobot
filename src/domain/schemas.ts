@@ -229,10 +229,17 @@ export const DashboardReportArgs = Schema.Struct({
   ...backendKeyField,
 });
 
+export const DashboardLiveReportArgs = Schema.Struct({
+  dashboardToken: Schema.String,
+});
+
 export type CallIngestArgs = Schema.Schema.Type<typeof CallIngestArgs>;
 export type CachedCarrier = Schema.Schema.Type<typeof CachedCarrier>;
 export type CallIngestRequest = Schema.Schema.Type<typeof CallIngestRequest>;
 export type CallRecord = Schema.Schema.Type<typeof CallRecord>;
+export type DashboardLiveReportArgs = Schema.Schema.Type<
+  typeof DashboardLiveReportArgs
+>;
 export type DashboardReport = Schema.Schema.Type<typeof DashboardReport>;
 export type FmcsaCarrier = Schema.Schema.Type<typeof FmcsaCarrier>;
 export type Load = Schema.Schema.Type<typeof Load>;

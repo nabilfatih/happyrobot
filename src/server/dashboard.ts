@@ -65,6 +65,8 @@ function loadDashboardData() {
 
     return {
       authorized: true as const,
+      convexUrl: yield* readRequiredEnv("CONVEX_URL"),
+      dashboardToken: yield* readRequiredEnv("DASHBOARD_REALTIME_TOKEN"),
       report: yield* readDashboardReport(),
     };
   }).pipe(

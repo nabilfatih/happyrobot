@@ -1,10 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { ConvexProvider, ConvexReactClient, useQuery } from "convex/react";
 import {
   Activity,
   BadgeCheck,
   CircleDollarSign,
   PhoneForwarded,
 } from "lucide-react";
+import { useMemo } from "react";
 import {
   Bar,
   Grid as BarGrid,
@@ -39,7 +41,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import type { DashboardReport } from "@/domain/schemas";
 import { getDashboardData, guardDashboardRequest } from "@/server/dashboard";
+import { api } from "../../convex/_generated/api";
 
 export const Route = createFileRoute("/")({
   server: {
@@ -94,7 +98,48 @@ function Dashboard() {
     );
   }
 
-  const report = data.report;
+  return (
+    <RealtimeDashboard
+      convexUrl={data.convexUrl}
+      dashboardToken={data.dashboardToken}
+      initialReport={data.report}
+    />
+  );
+}
+
+function RealtimeDashboard({
+  convexUrl,
+  dashboardToken,
+  initialReport,
+}: {
+  convexUrl: string;
+  dashboardToken: string;
+  initialReport: DashboardReport;
+}) {
+  const convexClient = useMemo(
+    () => new ConvexReactClient(convexUrl),
+    [convexUrl],
+  );
+
+  return (
+    <ConvexProvider client={convexClient}>
+      <DashboardSurface
+        dashboardToken={dashboardToken}
+        initialReport={initialReport}
+      />
+    </ConvexProvider>
+  );
+}
+
+function DashboardSurface({
+  dashboardToken,
+  initialReport,
+}: {
+  dashboardToken: string;
+  initialReport: DashboardReport;
+}) {
+  const liveReport = useQuery(api.dashboard.liveReport, { dashboardToken });
+  const report = liveReport ?? initialReport;
   const outcomeData = report.outcomeDistribution.map((entry) => ({
     label: labelize(entry.key),
     count: entry.count,
@@ -338,6 +383,7 @@ function formatDate(value: string) {
     hour: "2-digit",
     minute: "2-digit",
     month: "short",
+    timeZone: "America/Chicago",
   }).format(new Date(value));
 }
 

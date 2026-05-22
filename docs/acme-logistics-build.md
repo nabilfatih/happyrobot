@@ -15,12 +15,17 @@ negotiation events, final call ingestion, and dashboard reporting.
   implementations from Effect schemas.
 - Convex stores `loads`, `fmcsaCache`, `calls`, and `offerEvents`.
 - `src/data/loads.json` is the seeded source for Acme loads.
-- The dashboard reads only from our Convex records, not HappyRobot analytics.
+- The dashboard subscribes to a Convex live query after Basic auth and reads
+  only from our Convex records, not HappyRobot analytics.
 
 ```mermaid
 flowchart LR
   HR["HappyRobot web-call tools"] --> API["Railway Docker app"]
   Browser["Broker dashboard"] --> API
+  API --> BrowserToken["Initial report + dashboard realtime token"]
+  BrowserToken --> Browser
+  Browser --> Live["Convex live dashboard query"]
+  Live --> Convex
   API --> Convex["Convex + Confect functions"]
   Convex --> FMCSA["FMCSA QCMobile API"]
   Convex --> Store["Convex tables"]
@@ -58,6 +63,9 @@ Live HappyRobot workflow:
 - Railway-to-Convex calls include server-only `CONVEX_BACKEND_KEY`.
 - FMCSA key is stored only in Convex env.
 - Dashboard reads require HTTP Basic auth.
+- Authenticated dashboard sessions receive `DASHBOARD_REALTIME_TOKEN` for the
+  browser-side Convex live query. This token is separate from
+  `CONVEX_BACKEND_KEY`.
 - API and dashboard attempts use a fixed-window in-memory rate limit.
 - Responses set clickjacking, MIME sniffing, and referrer hardening headers.
 - Broad CORS is not enabled.
@@ -100,6 +108,7 @@ Railway env:
 HAPPYROBOT_API_KEY=...
 DASHBOARD_BASIC_USER=...
 DASHBOARD_BASIC_PASSWORD=...
+DASHBOARD_REALTIME_TOKEN=...
 CONVEX_URL=...
 CONVEX_BACKEND_KEY=...
 ```
@@ -112,6 +121,7 @@ Convex env:
 ```text
 FMCSA_WEB_KEY=...
 CONVEX_BACKEND_KEY=...
+DASHBOARD_REALTIME_TOKEN=...
 ```
 
 Verification:

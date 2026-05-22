@@ -13,7 +13,7 @@ The build includes a Dockerized TanStack Start app with public HappyRobot
 endpoints for carrier verification, load search, offer evaluation, and final
 call ingestion. It uses Effect Schema plus Confect/Convex for request/response
 validation, FMCSA lookup caching, app-owned call and offer records, and a
-basic-auth protected dashboard for operational metrics.
+basic-auth protected realtime dashboard for operational metrics.
 
 Links:
 

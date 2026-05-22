@@ -2,7 +2,8 @@
 
 TanStack Start app for the HappyRobot FDE submission. It exposes the public
 HappyRobot tool/webhook API, serves the basic-auth dashboard, and uses
-Convex/Confect for app-owned carrier, load, offer, call, and dashboard state.
+Convex/Confect for app-owned carrier, load, offer, call, and realtime dashboard
+state.
 
 Production dashboard: <https://happyrobot-production-6027.up.railway.app>
 
@@ -29,6 +30,7 @@ Railway/server env:
 - `HAPPYROBOT_API_KEY`
 - `DASHBOARD_BASIC_USER`
 - `DASHBOARD_BASIC_PASSWORD`
+- `DASHBOARD_REALTIME_TOKEN`
 - `CONVEX_URL`
 - `CONVEX_BACKEND_KEY`
 
@@ -36,6 +38,7 @@ Convex env:
 
 - `FMCSA_WEB_KEY`
 - `CONVEX_BACKEND_KEY`
+- `DASHBOARD_REALTIME_TOKEN`
 
 ## Scripts
 
@@ -66,7 +69,9 @@ The GET routes support HappyRobot webhook nodes. The POST offer and call routes
 accept canonical app payloads plus the HappyRobot aliases used by the live
 workflow.
 
-The dashboard is served at `/` and protected by HTTP Basic auth.
+The dashboard is served at `/`, protected by HTTP Basic auth, and uses one
+browser-side Convex live query for realtime metrics after the server loader
+authorizes the request.
 
 ## Docker And Railway
 

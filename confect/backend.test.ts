@@ -4,10 +4,12 @@ import refs from "./_generated/refs";
 import * as TestConfect from "./TestConfect";
 
 const backendKey = "convex-test-key";
+const dashboardToken = "dashboard-test-token";
 
 describe("Confect backend", () => {
   beforeEach(() => {
     process.env.CONVEX_BACKEND_KEY = backendKey;
+    process.env.DASHBOARD_REALTIME_TOKEN = dashboardToken;
     process.env.FMCSA_WEB_KEY = "fmcsa-test-key";
     vi.unstubAllGlobals();
   });
@@ -62,9 +64,13 @@ describe("Confect backend", () => {
       const report = yield* convex.query(refs.public.dashboard.report, {
         backendKey,
       });
+      const liveReport = yield* convex.query(refs.public.dashboard.liveReport, {
+        dashboardToken,
+      });
 
       expect(offer.decision).toBe("counter");
       expect(report.totalCalls).toBe(1);
+      expect(liveReport.totalCalls).toBe(1);
       expect(report.recentOffers[0]?.decision).toBe("counter");
       expect(report.agreementRate).toBe(1);
     }).pipe(Effect.provide(TestConfect.layer()), Effect.runPromise);

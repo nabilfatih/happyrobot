@@ -45,6 +45,27 @@ export function requireBackendKey(provided: string) {
   );
 }
 
+/** Validates the dashboard-only token used by browser Convex subscriptions. */
+export function requireDashboardRealtimeToken(provided: string) {
+  return Config.string("DASHBOARD_REALTIME_TOKEN").pipe(
+    Effect.mapError(
+      () =>
+        new BackendAuthError({
+          message: "Dashboard realtime token is not configured.",
+        }),
+    ),
+    Effect.flatMap((expected) => {
+      if (secretsMatch(provided, expected)) {
+        return Effect.void;
+      }
+
+      return Effect.fail(
+        new BackendAuthError({ message: "Invalid dashboard realtime token." }),
+      );
+    }),
+  );
+}
+
 /** Normalizes and validates an MC number inside Convex functions. */
 export function requireBackendMcNumber(value: string) {
   return Effect.gen(function* () {
