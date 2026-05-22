@@ -1,0 +1,15 @@
+node_modules
+.DS_Store
+.env
+.env.*
+.git
+.gitignore
+.nitro
+.output
+.screenshots
+.tanstack
+.vinxi
+data
+dist
+dist-ssr
+todos.json
