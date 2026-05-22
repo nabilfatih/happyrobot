@@ -35,15 +35,6 @@ None.
 - Current status: response hardening headers are present.
 - Production fix: add nonce/hash-based CSP after validating the final SSR build.
 
-## Low Findings
-
-### SBP-003: Generated Chart Code Uses A Raw Style Injection
-
-- Location: `src/components/evilcharts/ui/chart.tsx`
-- Impact: risky only if attacker-controlled values are passed into chart CSS.
-- Current status: chart config is developer-controlled in `src/routes/index.tsx`.
-- Fix: keep stored call payloads out of chart style/config fields.
-
 ## Positive Controls
 
 - Server-only env reads: `src/domain/config.ts`

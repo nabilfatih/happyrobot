@@ -12,7 +12,7 @@ Production dashboard: <https://happyrobot-production-6027.up.railway.app>
 - TanStack Start with React file routes and server routes
 - Convex backend generated and implemented through Confect
 - Effect Schema and Effect programs for validation, typed errors, and async work
-- Tailwind v4, COSS UI, EvilCharts
+- Tailwind v4 and COSS UI
 - Vitest, Docker, Railway
 
 ## Local Setup

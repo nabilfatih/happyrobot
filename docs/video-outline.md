@@ -7,8 +7,8 @@
 3. Carrier call: run one successful carrier flow with MC verification, load
    pitch, counteroffer, acceptance, and the mock transfer line.
 4. Dashboard metrics: show total calls, eligible rate, matched loads, agreement
-   rate, outcome chart, conversion chart, recent calls, offer history, and the
-   Convex live query updating the dashboard.
+   rate, outcome distribution, daily conversion, recent calls, offer history,
+   and the Convex live query updating the dashboard.
 5. Deployment and security: show Railway URL, Docker/Railway config,
    Convex/Confect backend, server-only secrets, API key auth, and dashboard
    Basic auth.

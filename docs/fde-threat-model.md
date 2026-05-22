@@ -71,7 +71,7 @@ flowchart LR
 
 | ID | Abuse Path | Impact | Existing Controls | Priority |
 | --- | --- | --- | --- | --- |
-| TM-001 | Leaked `HAPPYROBOT_API_KEY` posts fake calls/offers | Dashboard and audit poisoning | API key check, schemas, rate limit | Medium |
+| TM-001 | Leaked `HAPPYROBOT_API_KEY` posts forged calls/offers | Dashboard and audit poisoning | API key check, schemas, rate limit | Medium |
 | TM-002 | Weak Basic auth password exposes dashboard | Carrier/load/rate data disclosure | Basic challenge, rate limit, no-store headers | Medium |
 | TM-003 | Direct Convex caller guesses deployment URL | Backend logic abuse | Required `CONVEX_BACKEND_KEY` in every public Confect function | Medium |
 | TM-003A | Dashboard realtime token leaks from an authenticated browser | Operational metric disclosure | Separate dashboard-only token, no backend write capability | Medium |

@@ -35,11 +35,9 @@
     "convex": "^1.39.1",
     "effect": "^3.21.2",
     "lucide-react": "^0.545.0",
-    "motion": "^12.40.0",
     "nitro": "npm:nitro-nightly@3.0.1-20260520-201858-14f2fed3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "recharts": "^3.8.1",
     "tailwind-merge": "^3.6.0",
     "tailwindcss": "^4.1.18"
   },

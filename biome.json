@@ -17,7 +17,6 @@
       "!**/confect/_generated",
       "!**/convex/_generated",
       "!**/src/routeTree.gen.ts",
-      "!**/src/components/evilcharts",
       "!**/src/components/ui",
       "!**/src/styles.css"
     ]

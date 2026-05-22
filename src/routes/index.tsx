@@ -7,23 +7,6 @@ import {
   PhoneForwarded,
 } from "lucide-react";
 import { useMemo } from "react";
-import {
-  Bar,
-  Grid as BarGrid,
-  Tooltip as BarTooltip,
-  XAxis as BarXAxis,
-  YAxis as BarYAxis,
-  EvilBarChart,
-} from "@/components/evilcharts/charts/bar-chart";
-import {
-  EvilLineChart,
-  Line,
-  Grid as LineGrid,
-  Tooltip as LineTooltip,
-  XAxis as LineXAxis,
-  YAxis as LineYAxis,
-} from "@/components/evilcharts/charts/line-chart";
-import type { ChartConfig } from "@/components/evilcharts/ui/chart";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -56,32 +39,7 @@ export const Route = createFileRoute("/")({
   component: Dashboard,
 });
 
-const outcomeChartConfig = {
-  count: {
-    label: "Calls",
-    colors: {
-      light: [
-        "var(--color-chart-1)",
-        "var(--color-chart-2)",
-        "var(--color-chart-3)",
-        "var(--color-chart-4)",
-        "var(--color-chart-5)",
-      ],
-    },
-  },
-} satisfies ChartConfig;
-
-const conversionChartConfig = {
-  calls: {
-    label: "Calls",
-    colors: { light: ["var(--color-chart-2)"] },
-  },
-  booked: {
-    label: "Booked",
-    colors: { light: ["var(--color-chart-1)"] },
-  },
-} satisfies ChartConfig;
-
+/** Renders either the authenticated dashboard or the Basic auth challenge page. */
 function Dashboard() {
   const data = Route.useLoaderData();
 
@@ -107,6 +65,7 @@ function Dashboard() {
   );
 }
 
+/** Creates the Convex realtime client for the authenticated dashboard session. */
 function RealtimeDashboard({
   convexUrl,
   dashboardToken,
@@ -131,6 +90,7 @@ function RealtimeDashboard({
   );
 }
 
+/** Renders the live operational dashboard from Convex report data. */
 function DashboardSurface({
   dashboardToken,
   initialReport,
@@ -140,10 +100,12 @@ function DashboardSurface({
 }) {
   const liveReport = useQuery(api.dashboard.liveReport, { dashboardToken });
   const report = liveReport ?? initialReport;
-  const outcomeData = report.outcomeDistribution.map((entry) => ({
-    label: labelize(entry.key),
-    count: entry.count,
-  }));
+  const maxOutcomeCount = maxCount(
+    report.outcomeDistribution.map((entry) => entry.count),
+  );
+  const maxDailyCalls = maxCount(
+    report.dailyConversion.map((entry) => entry.calls),
+  );
   const metrics = [
     {
       label: "Total calls",
@@ -219,19 +181,15 @@ function DashboardSurface({
               Classification stored after each completed call.
             </CardDescription>
           </CardHeader>
-          <CardPanel>
-            <EvilBarChart
-              className="h-72 aspect-auto"
-              config={outcomeChartConfig}
-              data={outcomeData}
-              animationType="none"
-            >
-              <BarGrid vertical={false} />
-              <BarXAxis dataKey="label" />
-              <BarYAxis allowDecimals={false} />
-              <BarTooltip />
-              <Bar dataKey="count" variant="gradient" />
-            </EvilBarChart>
+          <CardPanel className="space-y-4">
+            {report.outcomeDistribution.map((entry) => (
+              <MetricBar
+                key={entry.key}
+                label={labelize(entry.key)}
+                max={maxOutcomeCount}
+                value={entry.count}
+              />
+            ))}
           </CardPanel>
         </Card>
 
@@ -241,19 +199,17 @@ function DashboardSurface({
             <CardDescription>Calls and booked outcomes by day.</CardDescription>
           </CardHeader>
           <CardPanel>
-            <EvilLineChart
-              className="h-72 aspect-auto"
-              config={conversionChartConfig}
-              data={[...report.dailyConversion]}
-              animationType="none"
-            >
-              <LineGrid />
-              <LineXAxis dataKey="date" />
-              <LineYAxis allowDecimals={false} />
-              <LineTooltip />
-              <Line dataKey="calls" />
-              <Line dataKey="booked" glowing />
-            </EvilLineChart>
+            <div className="space-y-4">
+              {report.dailyConversion.map((entry) => (
+                <DailyConversionRow
+                  key={entry.date}
+                  booked={entry.booked}
+                  calls={entry.calls}
+                  date={entry.date}
+                  maxCalls={maxDailyCalls}
+                />
+              ))}
+            </div>
           </CardPanel>
         </Card>
       </section>
@@ -362,6 +318,71 @@ function DashboardSurface({
   );
 }
 
+/** Renders one proportional count bar for a dashboard distribution row. */
+function MetricBar({
+  label,
+  max,
+  value,
+}: {
+  label: string;
+  max: number;
+  value: number;
+}) {
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center justify-between gap-4">
+        <span className="text-muted-foreground text-sm">{label}</span>
+        <span className="font-medium text-sm">{value.toLocaleString()}</span>
+      </div>
+      <div className="h-2 overflow-hidden rounded-full bg-muted">
+        <div
+          className="h-full rounded-full bg-primary"
+          style={{ width: barWidth(value, max) }}
+        />
+      </div>
+    </div>
+  );
+}
+
+/** Renders daily calls and booked outcomes with shared scale bars. */
+function DailyConversionRow({
+  booked,
+  calls,
+  date,
+  maxCalls,
+}: {
+  booked: number;
+  calls: number;
+  date: string;
+  maxCalls: number;
+}) {
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center justify-between gap-4">
+        <span className="text-muted-foreground text-sm">{date}</span>
+        <span className="font-medium text-sm">
+          {booked.toLocaleString()} / {calls.toLocaleString()} booked
+        </span>
+      </div>
+      <div className="space-y-1">
+        <div className="h-2 overflow-hidden rounded-full bg-muted">
+          <div
+            className="h-full rounded-full bg-primary"
+            style={{ width: barWidth(calls, maxCalls) }}
+          />
+        </div>
+        <div className="h-2 overflow-hidden rounded-full bg-muted">
+          <div
+            className="h-full rounded-full bg-success"
+            style={{ width: barWidth(booked, maxCalls) }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** Renders a compact label-value row inside the sales health card. */
 function HealthRow({
   label,
   value,
@@ -377,6 +398,17 @@ function HealthRow({
   );
 }
 
+/** Returns a non-zero maximum so empty chart scales remain stable. */
+function maxCount(values: ReadonlyArray<number>) {
+  return Math.max(1, ...values);
+}
+
+/** Converts a metric value into a stable percentage width. */
+function barWidth(value: number, max: number) {
+  return `${Math.round((value / max) * 100)}%`;
+}
+
+/** Formats stored ISO timestamps for the operations dashboard. */
 function formatDate(value: string) {
   return new Intl.DateTimeFormat("en-US", {
     day: "2-digit",
@@ -387,6 +419,7 @@ function formatDate(value: string) {
   }).format(new Date(value));
 }
 
+/** Formats optional dollar amounts without cents. */
 function formatMoney(value?: number) {
   if (value === undefined) {
     return "—";
@@ -399,6 +432,7 @@ function formatMoney(value?: number) {
   }).format(value);
 }
 
+/** Formats ratio metrics as whole percentages. */
 function formatPercent(value: number) {
   return new Intl.NumberFormat("en-US", {
     maximumFractionDigits: 0,
@@ -406,10 +440,12 @@ function formatPercent(value: number) {
   }).format(value);
 }
 
+/** Converts persisted enum values into readable dashboard labels. */
 function labelize(value: string) {
   return value.replaceAll("_", " ");
 }
 
+/** Selects a badge treatment for a call outcome. */
 function outcomeVariant(value: string) {
   if (value === "booked" || value === "transferred") {
     return "success";
