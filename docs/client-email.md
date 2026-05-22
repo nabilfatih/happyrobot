@@ -2,12 +2,12 @@
 
 To: Carlos Becker  
 Cc: [Recruiter email]  
-Subject: HappyRobot FDE take-home submission
+Subject: HappyRobot FDE submission
 
 Hi Carlos,
 
-I finished the Acme Logistics inbound carrier-sales proof of concept for the FDE
-take-home.
+I finished the Acme Logistics inbound carrier-sales build for the FDE
+submission.
 
 The build includes a Dockerized TanStack Start app with public HappyRobot
 endpoints for carrier verification, load search, offer evaluation, and final
@@ -18,11 +18,11 @@ basic-auth protected dashboard for operational metrics.
 Links:
 
 - Dashboard: <https://happyrobot-production-6027.up.railway.app>
-- Dashboard credentials: demo / provided separately
+- Dashboard credentials: ops / provided separately
 - GitHub repository: <https://github.com/nabilfatih/happyrobot>
 - HappyRobot workflow: <https://platform.happyrobot.ai/fdenabilakbarazzimafatih/workflows/olro8esrfzwz/editor/mc5cgua1zh5s>
 - Build notes: <https://github.com/nabilfatih/happyrobot/blob/main/docs/acme-logistics-build.md>
-- Demo video: [to be added]
+- Walkthrough video: [to be added]
 
 The HappyRobot flow uses the web-call trigger, collects the carrier MC number,
 verifies authority through FMCSA, searches matching Acme loads, negotiates up to

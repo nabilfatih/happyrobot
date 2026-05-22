@@ -55,7 +55,7 @@ export function fetchCarrierFromFmcsa(mcNumber: string, webKey: string) {
         fetch(url, {
           headers: {
             accept: "application/json",
-            "user-agent": "Acme Logistics FDE demo",
+            "user-agent": "Acme Logistics carrier sales",
           },
         }),
       catch: () =>

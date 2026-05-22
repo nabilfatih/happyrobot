@@ -2,8 +2,8 @@ import { mkdir } from "node:fs/promises";
 import { chromium, devices } from "playwright";
 
 const dashboardUrl = process.env.DASHBOARD_URL ?? "http://localhost:3000/";
-const username = process.env.DASHBOARD_BASIC_USER ?? "demo";
-const password = process.env.DASHBOARD_BASIC_PASSWORD ?? "demo";
+const username = process.env.DASHBOARD_BASIC_USER ?? "ops";
+const password = process.env.DASHBOARD_BASIC_PASSWORD ?? "password";
 const screenshotDirectory = ".screenshots";
 
 await mkdir(screenshotDirectory, { recursive: true });

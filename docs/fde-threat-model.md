@@ -87,6 +87,7 @@ flowchart LR
 ## Residual Risk
 
 The main remaining production hardening item is rate limiting. The current
-process-local limiter is enough for the take-home demo, but a scaled deployment
+process-local limiter is enough for the current single-instance deployment, but
+a scaled deployment
 should move API and dashboard throttling to Railway edge/proxy controls or a
 durable store.

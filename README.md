@@ -1,6 +1,6 @@
 # Acme Logistics Carrier Sales
 
-TanStack Start app for the HappyRobot FDE take-home. It exposes the public
+TanStack Start app for the HappyRobot FDE submission. It exposes the public
 HappyRobot tool/webhook API, serves the basic-auth dashboard, and uses
 Convex/Confect for app-owned carrier, load, offer, call, and dashboard state.
 

@@ -139,12 +139,12 @@ function Dashboard() {
                 Inbound carrier sales
               </h1>
               <p className="mt-3 max-w-2xl text-muted-foreground">
-                Live metrics from the HappyRobot proof of concept, backed by the
-                app-owned call and offer store.
+                Live carrier-sales metrics backed by Acme-owned call and offer
+                records.
               </p>
             </div>
             <Badge variant="success" size="lg">
-              Production-ready demo
+              Operations live
             </Badge>
           </div>
           <div className="grid min-w-0 gap-3 md:grid-cols-4">
@@ -218,7 +218,7 @@ function Dashboard() {
           <CardHeader>
             <CardTitle>Recent calls</CardTitle>
             <CardDescription>
-              Latest HappyRobot call extraction records.
+              Latest carrier call extraction records.
             </CardDescription>
           </CardHeader>
           <CardPanel>
@@ -260,7 +260,7 @@ function Dashboard() {
             <CardHeader>
               <CardTitle>Sales health</CardTitle>
               <CardDescription>
-                Operational indicators for the demo.
+                Operational indicators for carrier-sales performance.
               </CardDescription>
             </CardHeader>
             <CardPanel className="space-y-4">

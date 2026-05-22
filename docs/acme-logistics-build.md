@@ -3,7 +3,7 @@
 ## Overview
 
 This build is a broker-owned companion app for a HappyRobot inbound
-carrier-sales demo. HappyRobot owns the voice call. The Dockerized TanStack
+carrier-sales operation. HappyRobot owns the voice call. The Dockerized TanStack
 Start app owns public tool calls, dashboard access, auth, request validation,
 and response mapping. Convex/Confect owns carrier cache, seeded loads,
 negotiation events, final call ingestion, and dashboard reporting.
@@ -14,7 +14,7 @@ negotiation events, final call ingestion, and dashboard reporting.
 - Confect defines Convex tables, function specs, typed errors, and function
   implementations from Effect schemas.
 - Convex stores `loads`, `fmcsaCache`, `calls`, and `offerEvents`.
-- `src/data/loads.json` is the seeded source for Acme demo loads.
+- `src/data/loads.json` is the seeded source for Acme loads.
 - The dashboard reads only from our Convex records, not HappyRobot analytics.
 
 ```mermaid
@@ -79,9 +79,10 @@ Use the web-call trigger, not a purchased phone number.
    AI Classify or a real-time classifier for sentiment, then webhook to
    `/api/calls`.
 
-The published production workflow is Version 2 (`mc5cgua1zh5s`). It has zero
-blocking issues and zero dead-variable warnings, with Railway webhooks wired for
-carrier verification, load search, offer evaluation, and final call ingestion.
+The published production workflow is Version 2 (`mc5cgua1zh5s`) on the upgraded
+workflow engine. It has zero blocking issues and zero dead-variable warnings,
+with Railway webhooks wired for carrier verification, load search, offer
+evaluation, and final call ingestion.
 
 ## Reproduction
 
@@ -134,5 +135,5 @@ injects `PORT`, and checks `/health` before activating a deployment.
 - FMCSA availability is external; failures return a clean `502`.
 - Transfer is intentionally mocked because the challenge asks for a mock
   transfer message.
-- Demo load data is compact; production would add broker TMS integration,
+- Seed load data is compact; production would add broker TMS integration,
   richer lane matching, and audit exports.

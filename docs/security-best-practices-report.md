@@ -23,7 +23,7 @@ None.
 - Location: `src/server/rate-limit.ts`
 - Impact: limits are process-local, so horizontally scaled Railway replicas
   would each enforce their own counters.
-- Current status: acceptable for the demo.
+- Current status: acceptable for the current single-instance deployment.
 - Production fix: move throttling to an edge/proxy control or durable store.
 
 ### SBP-002: Strict CSP Is Not Enabled In App Code
