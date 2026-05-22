@@ -6,7 +6,6 @@ node_modules
 .gitignore
 .nitro
 .output
-.screenshots
 .tanstack
 .vinxi
 data

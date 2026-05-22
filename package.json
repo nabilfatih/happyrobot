@@ -16,7 +16,6 @@
     "start": "node .output/server/index.mjs",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "verify:dashboard": "node scripts/verify-dashboard.mjs",
     "format": "biome format",
     "lint": "biome lint",
     "check": "biome check"
@@ -54,7 +53,6 @@
     "@types/ws": "^8.18.1",
     "@vitejs/plugin-react": "^6.0.1",
     "convex-test": "^0.0.50",
-    "playwright": "^1.60.0",
     "typescript": "^6.0.2",
     "vite": "^8.0.0",
     "vitest": "^4.1.5"

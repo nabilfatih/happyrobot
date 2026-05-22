@@ -13,7 +13,7 @@ Production dashboard: <https://happyrobot-production-6027.up.railway.app>
 - Convex backend generated and implemented through Confect
 - Effect Schema and Effect programs for validation, typed errors, and async work
 - Tailwind v4, COSS UI, EvilCharts
-- Vitest, Playwright, Docker, Railway
+- Vitest, Docker, Railway
 
 ## Local Setup
 
@@ -47,11 +47,7 @@ pnpm test
 pnpm typecheck
 pnpm check
 pnpm build
-pnpm verify:dashboard
 ```
-
-`pnpm verify:dashboard` expects a running app and writes desktop/mobile
-screenshots to `.screenshots/`.
 
 ## API
 
