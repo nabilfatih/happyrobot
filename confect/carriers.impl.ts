@@ -4,6 +4,7 @@ import {
   describeCarrierStatus,
   fetchCarrierFromFmcsa,
 } from "../src/domain/carriers";
+import type { CachedCarrier } from "../src/domain/schemas";
 import api from "./_generated/api";
 import refs from "./_generated/refs";
 import {
@@ -33,7 +34,7 @@ const verify = FunctionImpl.make(
         mcNumber,
       }).pipe(Effect.orDie);
 
-      if (cached) {
+      if (cached && hasCarrierStatus(cached)) {
         return {
           cacheHit: true,
           carrier: cached,
@@ -107,3 +108,7 @@ export const carriers = GroupImpl.make(api, "carriers").pipe(
   Layer.provide(cacheByMc),
   Layer.provide(saveCache),
 );
+
+function hasCarrierStatus(carrier: CachedCarrier) {
+  return Boolean(carrier.allowToOperate && carrier.outOfService);
+}

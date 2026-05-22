@@ -122,15 +122,26 @@ const FmcsaValue = Schema.Union(Schema.String, Schema.Number, Schema.Null);
 
 export const FmcsaCarrier = Schema.Struct({
   allowToOperate: Schema.optional(FmcsaValue),
+  allowedToOperate: Schema.optional(FmcsaValue),
   outOfService: Schema.optional(FmcsaValue),
+  oosDate: Schema.optional(FmcsaValue),
   dotNumber: Schema.optional(FmcsaValue),
   mcNumber: Schema.optional(FmcsaValue),
   legalName: Schema.optional(FmcsaValue),
   dbaName: Schema.optional(FmcsaValue),
 });
 
+const FmcsaCarrierEnvelope = Schema.Struct({
+  carrier: FmcsaCarrier,
+});
+
+export const FmcsaCarrierContent = Schema.Union(
+  FmcsaCarrierEnvelope,
+  FmcsaCarrier,
+);
+
 export const FmcsaResponse = Schema.Struct({
-  content: Schema.Union(FmcsaCarrier, Schema.Array(FmcsaCarrier)),
+  content: Schema.Union(FmcsaCarrierContent, Schema.Array(FmcsaCarrierContent)),
 });
 
 export const CachedCarrier = Schema.Struct({
@@ -242,6 +253,9 @@ export type DashboardLiveReportArgs = Schema.Schema.Type<
 >;
 export type DashboardReport = Schema.Schema.Type<typeof DashboardReport>;
 export type FmcsaCarrier = Schema.Schema.Type<typeof FmcsaCarrier>;
+export type FmcsaCarrierContent = Schema.Schema.Type<
+  typeof FmcsaCarrierContent
+>;
 export type Load = Schema.Schema.Type<typeof Load>;
 export type LoadSearchArgs = Schema.Schema.Type<typeof LoadSearchArgs>;
 export type LoadSearchRequest = Schema.Schema.Type<typeof LoadSearchRequest>;

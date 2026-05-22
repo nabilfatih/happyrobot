@@ -3,6 +3,7 @@ import { ExternalServiceError, ValidationError } from "./errors";
 import {
   CachedCarrier,
   type CachedCarrier as CachedCarrierType,
+  type FmcsaCarrierContent as FmcsaCarrierContentType,
   type FmcsaCarrier as FmcsaCarrierType,
   FmcsaResponse,
 } from "./schemas";
@@ -31,8 +32,11 @@ export function requireMcNumber(value: string) {
 
 /** Maps an FMCSA carrier record to the eligibility result used by the agent. */
 export function mapFmcsaCarrier(mcNumber: string, carrier: FmcsaCarrierType) {
-  const allowToOperate = textValue(carrier.allowToOperate).toUpperCase();
-  const outOfService = textValue(carrier.outOfService).toUpperCase();
+  const allowToOperate = (
+    textValue(carrier.allowToOperate) || textValue(carrier.allowedToOperate)
+  ).toUpperCase();
+  const outOfService =
+    textValue(carrier.outOfService).toUpperCase() || oosDateStatus(carrier);
 
   return Schema.decodeUnknownSync(CachedCarrier)({
     mcNumber,
@@ -44,6 +48,14 @@ export function mapFmcsaCarrier(mcNumber: string, carrier: FmcsaCarrierType) {
     outOfService,
     checkedAt: new Date().toISOString(),
   });
+}
+
+function oosDateStatus(carrier: FmcsaCarrierType) {
+  if (textValue(carrier.oosDate)) {
+    return "Y";
+  }
+
+  return "N";
 }
 
 /** Calls FMCSA QCMobile by MC number and returns a normalized eligibility result. */
@@ -113,13 +125,19 @@ export function describeCarrierStatus(carrier: CachedCarrierType) {
 }
 
 function firstCarrier(
-  content: FmcsaCarrierType | ReadonlyArray<FmcsaCarrierType>,
+  content: FmcsaCarrierContentType | ReadonlyArray<FmcsaCarrierContentType>,
 ) {
-  if (Array.isArray(content)) {
-    return content[0];
+  const selected = Array.isArray(content) ? content[0] : content;
+
+  if (!selected) {
+    return undefined;
   }
 
-  return content;
+  if ("carrier" in selected) {
+    return selected.carrier;
+  }
+
+  return selected;
 }
 
 function optionalText(value: FmcsaCarrierType[keyof FmcsaCarrierType]) {
