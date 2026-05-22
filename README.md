@@ -4,6 +4,8 @@ TanStack Start app for the HappyRobot FDE take-home. It exposes the public
 HappyRobot tool/webhook API, serves the basic-auth dashboard, and uses
 Convex/Confect for app-owned carrier, load, offer, call, and dashboard state.
 
+Production dashboard: <https://happyrobot-production-6027.up.railway.app>
+
 ## Stack
 
 - TanStack Start with React file routes and server routes
@@ -54,9 +56,15 @@ All HappyRobot-facing endpoints require `x-api-key: HAPPYROBOT_API_KEY`.
 
 - `GET /health`
 - `POST /api/carriers/verify`
+- `GET /api/carriers/verify`
 - `POST /api/loads/search`
+- `GET /api/loads/search`
 - `POST /api/offers/evaluate`
 - `POST /api/calls`
+
+The GET routes support HappyRobot webhook nodes. The POST offer and call routes
+accept canonical app payloads plus the HappyRobot aliases used by the live
+workflow.
 
 The dashboard is served at `/` and protected by HTTP Basic auth.
 

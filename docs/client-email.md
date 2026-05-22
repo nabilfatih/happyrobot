@@ -17,12 +17,12 @@ basic-auth protected dashboard for operational metrics.
 
 Links:
 
-- Dashboard: [Railway dashboard URL]
-- Dashboard credentials: [username] / [password]
-- GitHub repository: [repository URL]
-- HappyRobot workflow: [workflow URL]
-- Build notes: [docs/acme-logistics-build.md URL]
-- Demo video: [video URL]
+- Dashboard: <https://happyrobot-production-6027.up.railway.app>
+- Dashboard credentials: demo / provided separately
+- GitHub repository: <https://github.com/nabilfatih/happyrobot>
+- HappyRobot workflow: <https://platform.happyrobot.ai/fdenabilakbarazzimafatih/workflows/olro8esrfzwz/editor/mc5cgua1zh5s>
+- Build notes: <https://github.com/nabilfatih/happyrobot/blob/main/docs/acme-logistics-build.md>
+- Demo video: [to be added]
 
 The HappyRobot flow uses the web-call trigger, collects the carrier MC number,
 verifies authority through FMCSA, searches matching Acme loads, negotiates up to

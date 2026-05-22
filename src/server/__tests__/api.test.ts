@@ -6,7 +6,9 @@ import {
   ingestCallProgram,
   runApi,
   searchLoadsProgram,
+  searchLoadsQueryProgram,
   verifyCarrierProgram,
+  verifyCarrierQueryProgram,
 } from "@/server/api";
 import {
   evaluateOffer,
@@ -37,6 +39,23 @@ describe("HappyRobot API handlers", () => {
     );
 
     expect(response.status).toBe(401);
+  });
+
+  it("accepts comma-separated API keys for key rotation", async () => {
+    process.env.HAPPYROBOT_API_KEY = `old-key,${apiKey}`;
+    vi.mocked(searchLoads).mockReturnValue(
+      Effect.succeed({
+        alternatives: [],
+        matched: false,
+        selected: null,
+      }),
+    );
+
+    const response = await runApi(
+      searchLoadsProgram(jsonRequest("/api/loads/search", {}, apiKey)),
+    );
+
+    expect(response.status).toBe(200);
   });
 
   it("rejects invalid payloads before calling Convex", async () => {
@@ -75,6 +94,32 @@ describe("HappyRobot API handlers", () => {
 
     expect(response.status).toBe(200);
     expect(body.carrier.eligible).toBe(true);
+    expect(verifyCarrier).toHaveBeenCalledWith({ mcNumber: "MC 123456" });
+  });
+
+  it("maps query-style carrier verification webhooks to Convex", async () => {
+    vi.mocked(verifyCarrier).mockReturnValue(
+      Effect.succeed({
+        cacheHit: true,
+        carrier: {
+          allowToOperate: "Y",
+          checkedAt: "2026-05-22T10:00:00.000Z",
+          eligible: true,
+          legalName: "Road Ready LLC",
+          mcNumber: "123456",
+          outOfService: "N",
+        },
+        message: "Road Ready LLC is eligible with active operating authority.",
+      }),
+    );
+
+    const response = await runApi(
+      verifyCarrierQueryProgram(
+        queryRequest("/api/carriers/verify?mc_number=MC%20123456", apiKey),
+      ),
+    );
+
+    expect(response.status).toBe(200);
     expect(verifyCarrier).toHaveBeenCalledWith({ mcNumber: "MC 123456" });
   });
 
@@ -128,6 +173,44 @@ describe("HappyRobot API handlers", () => {
     expect(ingestCall).toHaveBeenCalledOnce();
   });
 
+  it("normalizes HappyRobot call webhook field aliases", async () => {
+    vi.mocked(ingestCall).mockReturnValue(
+      Effect.succeed({ callId: "call-id", stored: true }),
+    );
+
+    const response = await runApi(
+      ingestCallProgram(
+        jsonRequest(
+          "/api/calls",
+          {
+            booking_decision: "accepted",
+            classification: "booked",
+            decline_reason: "",
+            duration: 312,
+            mc_number: "MC 123456",
+            transcript: "Carrier accepted the Dallas to Atlanta load.",
+          },
+          apiKey,
+        ),
+      ),
+    );
+
+    expect(response.status).toBe(200);
+    expect(ingestCall).toHaveBeenCalledWith({
+      agreedRate: undefined,
+      carrierName: undefined,
+      loadId: undefined,
+      loadboardRate: undefined,
+      mcNumber: "MC 123456",
+      negotiationTurns: 0,
+      offers: [],
+      outcome: "booked",
+      sentiment: "neutral",
+      summary: "Carrier accepted the Dallas to Atlanta load.",
+      transferMocked: true,
+    });
+  });
+
   it("returns offer evaluations from Convex", async () => {
     vi.mocked(evaluateOffer).mockReturnValue(
       Effect.succeed({
@@ -158,6 +241,40 @@ describe("HappyRobot API handlers", () => {
     expect(evaluateOffer).toHaveBeenCalledOnce();
   });
 
+  it("normalizes HappyRobot offer webhook field aliases", async () => {
+    vi.mocked(evaluateOffer).mockReturnValue(
+      Effect.succeed({
+        acceptedRate: 2600,
+        decision: "accept",
+        eventId: "offer-id",
+        maxRate: 2650,
+        message: "Accepted at $2,600 all-in.",
+      }),
+    );
+
+    const response = await runApi(
+      evaluateOfferProgram(
+        jsonRequest(
+          "/api/offers/evaluate",
+          {
+            mc_number: "MC 123456",
+            offer_amount: 2600,
+            reference_number: "ACME-1001",
+          },
+          apiKey,
+        ),
+      ),
+    );
+
+    expect(response.status).toBe(200);
+    expect(evaluateOffer).toHaveBeenCalledWith({
+      loadId: "ACME-1001",
+      mcNumber: "MC 123456",
+      proposedRate: 2600,
+      turn: 1,
+    });
+  });
+
   it("returns load search results from Convex", async () => {
     vi.mocked(searchLoads).mockReturnValue(
       Effect.succeed({
@@ -176,6 +293,34 @@ describe("HappyRobot API handlers", () => {
     expect(response.status).toBe(200);
     expect(searchLoads).toHaveBeenCalledWith({ origin: "Dallas" });
   });
+
+  it("maps query-style load search webhooks to Convex", async () => {
+    vi.mocked(searchLoads).mockReturnValue(
+      Effect.succeed({
+        alternatives: [],
+        matched: false,
+        selected: null,
+      }),
+    );
+
+    const response = await runApi(
+      searchLoadsQueryProgram(
+        queryRequest(
+          "/api/loads/search?origin=Dallas&equipment_type=van&max_weight=42000",
+          apiKey,
+        ),
+      ),
+    );
+
+    expect(response.status).toBe(200);
+    expect(searchLoads).toHaveBeenCalledWith({
+      destination: undefined,
+      equipmentType: "van",
+      maxWeight: 42_000,
+      origin: "Dallas",
+      pickupDate: undefined,
+    });
+  });
 });
 
 function jsonRequest(url: string, body: unknown, key?: string) {
@@ -189,5 +334,18 @@ function jsonRequest(url: string, body: unknown, key?: string) {
     body: JSON.stringify(body),
     headers,
     method: "POST",
+  });
+}
+
+function queryRequest(url: string, key?: string) {
+  const headers = new Headers();
+
+  if (key) {
+    headers.set("x-api-key", key);
+  }
+
+  return new Request(`http://localhost${url}`, {
+    headers,
+    method: "GET",
   });
 }

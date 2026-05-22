@@ -32,14 +32,24 @@ All HappyRobot-facing endpoints require `x-api-key`.
 
 - `POST /api/carriers/verify`: normalizes MC text, calls Convex, checks FMCSA
   cache, calls FMCSA on a miss, and returns eligibility.
+- `GET /api/carriers/verify`: compatibility route for HappyRobot GET webhook
+  nodes; accepts `mc_number` or `mcNumber`.
 - `POST /api/loads/search`: seeds missing loads, scores lane/equipment/date
   preferences, and returns the selected load plus alternatives.
+- `GET /api/loads/search`: compatibility route for HappyRobot GET webhook
+  nodes; accepts lane and equipment query aliases.
 - `POST /api/offers/evaluate`: accepts at or below 108% of loadboard rate
   rounded to $25, counters before turn 3, and rejects after turn 3 or
-  unrealistic offers.
+  unrealistic offers. It accepts the canonical app body and HappyRobot aliases
+  such as `offer_amount`, `mc_number`, and `reference_number`.
 - `POST /api/calls`: stores HappyRobot extraction/classification output for
-  dashboard reporting.
+  dashboard reporting. It accepts the canonical app body and HappyRobot aliases
+  such as `transcript`, `classification`, `booking_decision`, and `mc_number`.
 - `GET /health`: Railway deployment health check.
+
+Production app: <https://happyrobot-production-6027.up.railway.app>
+Live HappyRobot workflow:
+<https://platform.happyrobot.ai/fdenabilakbarazzimafatih/workflows/olro8esrfzwz/editor/mc5cgua1zh5s>
 
 ## Security
 
@@ -69,6 +79,10 @@ Use the web-call trigger, not a purchased phone number.
    AI Classify or a real-time classifier for sentiment, then webhook to
    `/api/calls`.
 
+The published production workflow is Version 2 (`mc5cgua1zh5s`). It has zero
+blocking issues and zero dead-variable warnings, with Railway webhooks wired for
+carrier verification, load search, offer evaluation, and final call ingestion.
+
 ## Reproduction
 
 ```bash
@@ -88,6 +102,9 @@ DASHBOARD_BASIC_PASSWORD=...
 CONVEX_URL=...
 CONVEX_BACKEND_KEY=...
 ```
+
+`HAPPYROBOT_API_KEY` can be a comma-separated key list so old HappyRobot node
+keys and a rotated app key can overlap during rollout.
 
 Convex env:
 
