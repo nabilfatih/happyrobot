@@ -1,6 +1,6 @@
 import { Effect } from "effect";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { ExternalServiceError } from "@/domain/errors";
+import { ExternalServiceError } from "#/domain/errors";
 import {
   evaluateOfferProgram,
   ingestCallProgram,
@@ -9,15 +9,15 @@ import {
   searchLoadsQueryProgram,
   verifyCarrierProgram,
   verifyCarrierQueryProgram,
-} from "@/server/api";
+} from "#/server/api";
 import {
   evaluateOffer,
   ingestCall,
   searchLoads,
   verifyCarrier,
-} from "@/server/backend";
+} from "#/server/backend";
 
-vi.mock("@/server/backend", () => ({
+vi.mock("#/server/backend", () => ({
   evaluateOffer: vi.fn(),
   ingestCall: vi.fn(),
   readDashboardReport: vi.fn(),

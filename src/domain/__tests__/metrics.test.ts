@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildDashboardReport } from "../metrics";
+import { buildDashboardReport } from "#/domain/metrics";
 
 describe("dashboard metrics", () => {
   it("aggregates call, conversion, sentiment, and offer metrics", () => {

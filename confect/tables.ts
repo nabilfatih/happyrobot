@@ -4,7 +4,7 @@ import {
   Load,
   StoredCall,
   StoredOfferEvent,
-} from "../src/domain/schemas";
+} from "#/domain/schemas";
 
 export const Loads = Table.make("loads", Load).index("by_load_id", ["load_id"]);
 

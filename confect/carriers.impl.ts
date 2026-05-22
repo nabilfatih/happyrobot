@@ -3,22 +3,22 @@ import { Effect, Layer, Option } from "effect";
 import {
   describeCarrierStatus,
   fetchCarrierFromFmcsa,
-} from "../src/domain/carriers";
-import type { CachedCarrier } from "../src/domain/schemas";
-import api from "./_generated/api";
-import refs from "./_generated/refs";
+} from "#/domain/carriers";
+import type { CachedCarrier } from "#/domain/schemas";
+import api from "#confect/_generated/api";
+import refs from "#confect/_generated/refs";
 import {
   DatabaseReader,
   DatabaseWriter,
   MutationRunner,
   QueryRunner,
-} from "./_generated/services";
+} from "#confect/_generated/services";
 import {
   readFmcsaWebKey,
   requireBackendKey,
   requireBackendMcNumber,
-} from "./backend";
-import { BackendExternalError } from "./errors";
+} from "#confect/backend";
+import { BackendExternalError } from "#confect/errors";
 
 const verify = FunctionImpl.make(
   api,

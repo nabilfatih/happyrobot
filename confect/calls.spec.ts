@@ -1,6 +1,6 @@
 import { FunctionSpec, GroupSpec } from "@confect/core";
-import { CallIngestArgs, CallIngestResponse } from "../src/domain/schemas";
-import { BackendError } from "./errors";
+import { CallIngestArgs, CallIngestResponse } from "#/domain/schemas";
+import { BackendError } from "#confect/errors";
 
 export const calls = GroupSpec.make("calls").addFunction(
   FunctionSpec.publicMutation({

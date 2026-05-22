@@ -1,6 +1,6 @@
-import { NotFoundError } from "./errors";
-import { findLoad } from "./loads";
-import type { Load, OfferDecision } from "./schemas";
+import { NotFoundError } from "#/domain/errors";
+import { findLoad } from "#/domain/loads";
+import type { Load, OfferDecision } from "#/domain/schemas";
 
 const maxNegotiationTurns = 3;
 const targetPremium = 1.08;

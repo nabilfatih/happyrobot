@@ -1,7 +1,11 @@
 import { Schema } from "effect";
-import loadsJson from "../data/loads.json";
-import { NotFoundError } from "./errors";
-import { Load, type LoadSearchRequest, type Load as LoadType } from "./schemas";
+import loadsJson from "#/data/loads.json";
+import { NotFoundError } from "#/domain/errors";
+import {
+  Load,
+  type LoadSearchRequest,
+  type Load as LoadType,
+} from "#/domain/schemas";
 
 const LoadList = Schema.Array(Load);
 

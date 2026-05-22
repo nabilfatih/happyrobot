@@ -1,5 +1,5 @@
 import { Effect } from "effect";
-import { RateLimitError } from "@/domain/errors";
+import { RateLimitError } from "#/domain/errors";
 
 const buckets = new Map<string, { count: number; resetAt: number }>();
 

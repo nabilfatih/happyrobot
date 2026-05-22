@@ -1,12 +1,12 @@
 import { Effect, Schema } from "effect";
-import { ExternalServiceError, ValidationError } from "./errors";
+import { ExternalServiceError, ValidationError } from "#/domain/errors";
 import {
   CachedCarrier,
   type CachedCarrier as CachedCarrierType,
   type FmcsaCarrierContent as FmcsaCarrierContentType,
   type FmcsaCarrier as FmcsaCarrierType,
   FmcsaResponse,
-} from "./schemas";
+} from "#/domain/schemas";
 
 const fmcsaBaseUrl = "https://mobile.fmcsa.dot.gov/qc/services";
 

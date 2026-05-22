@@ -1,17 +1,17 @@
 import { Effect, Schema } from "effect";
-import { ValidationError } from "@/domain/errors";
+import { ValidationError } from "#/domain/errors";
 import {
   type HappyRobotCallIngestRequest as HappyRobotCallIngestInput,
   HappyRobotCallIngestRequest,
   type HappyRobotOfferEvaluateRequest as HappyRobotOfferEvaluateInput,
   HappyRobotOfferEvaluateRequest,
-} from "@/domain/happyrobot-schemas";
+} from "#/domain/happyrobot-schemas";
 import {
   CallIngestRequest,
   OfferEvaluateRequest,
   type Outcome,
   type Sentiment,
-} from "@/domain/schemas";
+} from "#/domain/schemas";
 
 /** Decodes canonical or HappyRobot-shaped offer payloads into app input. */
 export function decodeOfferEvaluateBody(body: unknown) {

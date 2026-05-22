@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ingestCallProgram, runApi } from "@/server/api";
+import { ingestCallProgram, runApi } from "#/server/api";
 
 export const Route = createFileRoute("/api/calls")({
   server: {

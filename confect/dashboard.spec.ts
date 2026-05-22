@@ -3,8 +3,8 @@ import {
   DashboardLiveReportArgs,
   DashboardReport,
   DashboardReportArgs,
-} from "../src/domain/schemas";
-import { BackendError } from "./errors";
+} from "#/domain/schemas";
+import { BackendError } from "#confect/errors";
 
 export const dashboard = GroupSpec.make("dashboard")
   .addFunction(

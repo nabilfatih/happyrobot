@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { searchLoads } from "../loads";
+import { searchLoads } from "#/domain/loads";
 
 describe("load search", () => {
   it("prioritizes lane and equipment matches", () => {

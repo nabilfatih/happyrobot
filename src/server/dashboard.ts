@@ -5,10 +5,10 @@ import {
   setResponseStatus,
 } from "@tanstack/react-start/server";
 import { Effect } from "effect";
-import { readRequiredEnv, secretsMatch } from "@/domain/config";
-import { readDashboardReport } from "./backend";
-import { checkRateLimit, requestRateLimitKey } from "./rate-limit";
-import { securityHeaders } from "./security-headers";
+import { readRequiredEnv, secretsMatch } from "#/domain/config";
+import { readDashboardReport } from "#/server/backend";
+import { checkRateLimit, requestRateLimitKey } from "#/server/rate-limit";
+import { securityHeaders } from "#/server/security-headers";
 
 /** Guards the dashboard HTTP response with a real Basic auth challenge. */
 export function guardDashboardRequest(request: Request) {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { evaluateOffer, roundTo25 } from "../offers";
+import { evaluateOffer, roundTo25 } from "#/domain/offers";
 
 describe("offer negotiation policy", () => {
   it("rounds to broker-friendly increments", () => {

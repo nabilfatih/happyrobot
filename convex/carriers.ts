@@ -1,4 +1,4 @@
-import registeredFunctions from "../confect/_generated/registeredFunctions";
+import registeredFunctions from "#confect/_generated/registeredFunctions";
 
 export const cacheByMc = registeredFunctions.carriers.cacheByMc;
 export const saveCache = registeredFunctions.carriers.saveCache;

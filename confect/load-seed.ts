@@ -1,6 +1,9 @@
 import { Effect, Option } from "effect";
-import { loads } from "../src/domain/loads";
-import type { DatabaseReader, DatabaseWriter } from "./_generated/services";
+import { loads } from "#/domain/loads";
+import type {
+  DatabaseReader,
+  DatabaseWriter,
+} from "#confect/_generated/services";
 
 /** Upserts the JSON seed loads into Convex before load-dependent work. */
 export function seedLoads(reader: DatabaseReader, writer: DatabaseWriter) {

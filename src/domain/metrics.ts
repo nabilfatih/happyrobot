@@ -1,4 +1,9 @@
-import type { CallRecord, OfferEvent, Outcome, Sentiment } from "./schemas";
+import type {
+  CallRecord,
+  OfferEvent,
+  Outcome,
+  Sentiment,
+} from "#/domain/schemas";
 
 const outcomes = [
   "booked",

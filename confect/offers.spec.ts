@@ -1,9 +1,6 @@
 import { FunctionSpec, GroupSpec } from "@confect/core";
-import {
-  OfferEvaluateArgs,
-  OfferEvaluateResponse,
-} from "../src/domain/schemas";
-import { BackendError } from "./errors";
+import { OfferEvaluateArgs, OfferEvaluateResponse } from "#/domain/schemas";
+import { BackendError } from "#confect/errors";
 
 export const offers = GroupSpec.make("offers").addFunction(
   FunctionSpec.publicMutation({

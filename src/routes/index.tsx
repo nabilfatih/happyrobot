@@ -7,15 +7,15 @@ import {
   PhoneForwarded,
 } from "lucide-react";
 import { useMemo } from "react";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "#/components/ui/badge";
 import {
   Card,
   CardDescription,
   CardHeader,
   CardPanel,
   CardTitle,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+} from "#/components/ui/card";
+import { Separator } from "#/components/ui/separator";
 import {
   Table,
   TableBody,
@@ -23,10 +23,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import type { DashboardReport } from "@/domain/schemas";
-import { getDashboardData, guardDashboardRequest } from "@/server/dashboard";
-import { api } from "../../convex/_generated/api";
+} from "#/components/ui/table";
+import type { DashboardReport } from "#/domain/schemas";
+import { getDashboardData, guardDashboardRequest } from "#/server/dashboard";
+import { api } from "#convex/_generated/api";
 
 export const Route = createFileRoute("/")({
   server: {

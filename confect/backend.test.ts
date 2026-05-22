@@ -1,7 +1,7 @@
 import { Effect } from "effect";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import refs from "./_generated/refs";
-import * as TestConfect from "./TestConfect";
+import refs from "#confect/_generated/refs";
+import * as TestConfect from "#confect/TestConfect";
 
 const backendKey = "convex-test-key";
 const dashboardToken = "dashboard-test-token";

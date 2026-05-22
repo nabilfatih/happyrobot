@@ -1,19 +1,19 @@
 import { HttpClient } from "@confect/js";
 import { Effect } from "effect";
-import { readRequiredEnv } from "@/domain/config";
+import { readRequiredEnv } from "#/domain/config";
 import {
   ConfigError,
   ExternalServiceError,
   NotFoundError,
   ValidationError,
-} from "@/domain/errors";
+} from "#/domain/errors";
 import type {
   CallIngestRequest,
   LoadSearchRequest,
   OfferEvaluateRequest,
   VerifyCarrierRequest,
-} from "@/domain/schemas";
-import refs from "../../confect/_generated/refs";
+} from "#/domain/schemas";
+import refs from "#confect/_generated/refs";
 
 /** Calls the Convex carrier verification action through Confect. */
 export function verifyCarrier(input: VerifyCarrierRequest) {

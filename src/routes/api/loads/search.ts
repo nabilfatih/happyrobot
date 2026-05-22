@@ -3,7 +3,7 @@ import {
   runApi,
   searchLoadsProgram,
   searchLoadsQueryProgram,
-} from "@/server/api";
+} from "#/server/api";
 
 export const Route = createFileRoute("/api/loads/search")({
   server: {

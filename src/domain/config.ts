@@ -1,5 +1,5 @@
 import { Effect } from "effect";
-import { ConfigError } from "./errors";
+import { ConfigError } from "#/domain/errors";
 
 /** Reads a required secret from the server process environment. */
 export function readRequiredEnv(name: string) {

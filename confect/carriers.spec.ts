@@ -4,8 +4,8 @@ import {
   CachedCarrier,
   VerifyCarrierArgs,
   VerifyCarrierResponse,
-} from "../src/domain/schemas";
-import { BackendError } from "./errors";
+} from "#/domain/schemas";
+import { BackendError } from "#confect/errors";
 
 export const carriers = GroupSpec.make("carriers")
   .addFunction(

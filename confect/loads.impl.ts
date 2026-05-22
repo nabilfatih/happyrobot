@@ -1,10 +1,10 @@
 import { FunctionImpl, GroupImpl } from "@confect/server";
 import { Effect, Layer } from "effect";
-import { searchLoadRecords, summarizeLoad } from "../src/domain/loads";
-import api from "./_generated/api";
-import { DatabaseReader, DatabaseWriter } from "./_generated/services";
-import { requireBackendKey } from "./backend";
-import { seedLoads } from "./load-seed";
+import { searchLoadRecords, summarizeLoad } from "#/domain/loads";
+import api from "#confect/_generated/api";
+import { DatabaseReader, DatabaseWriter } from "#confect/_generated/services";
+import { requireBackendKey } from "#confect/backend";
+import { seedLoads } from "#confect/load-seed";
 
 const search = FunctionImpl.make(api, "loads", "search", (input) =>
   Effect.gen(function* () {

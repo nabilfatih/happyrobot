@@ -4,7 +4,7 @@ import {
   fetchCarrierFromFmcsa,
   mapFmcsaCarrier,
   normalizeMcNumber,
-} from "../carriers";
+} from "#/domain/carriers";
 
 describe("carrier verification helpers", () => {
   beforeEach(() => {

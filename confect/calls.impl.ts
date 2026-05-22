@@ -1,8 +1,8 @@
 import { FunctionImpl, GroupImpl } from "@confect/server";
 import { Effect, Layer } from "effect";
-import api from "./_generated/api";
-import { DatabaseWriter } from "./_generated/services";
-import { currentIsoTime, requireBackendKey } from "./backend";
+import api from "#confect/_generated/api";
+import { DatabaseWriter } from "#confect/_generated/services";
+import { currentIsoTime, requireBackendKey } from "#confect/backend";
 
 const ingest = FunctionImpl.make(
   api,

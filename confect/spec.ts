@@ -1,9 +1,9 @@
 import { Spec } from "@confect/core";
-import { calls } from "./calls.spec";
-import { carriers } from "./carriers.spec";
-import { dashboard } from "./dashboard.spec";
-import { loads } from "./loads.spec";
-import { offers } from "./offers.spec";
+import { calls } from "#confect/calls.spec";
+import { carriers } from "#confect/carriers.spec";
+import { dashboard } from "#confect/dashboard.spec";
+import { loads } from "#confect/loads.spec";
+import { offers } from "#confect/offers.spec";
 
 export default Spec.make()
   .add(carriers)

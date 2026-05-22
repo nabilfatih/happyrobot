@@ -1,11 +1,11 @@
 import { Impl } from "@confect/server";
 import { Layer } from "effect";
-import api from "./_generated/api";
-import { calls } from "./calls.impl";
-import { carriers } from "./carriers.impl";
-import { dashboard } from "./dashboard.impl";
-import { loads } from "./loads.impl";
-import { offers } from "./offers.impl";
+import api from "#confect/_generated/api";
+import { calls } from "#confect/calls.impl";
+import { carriers } from "#confect/carriers.impl";
+import { dashboard } from "#confect/dashboard.impl";
+import { loads } from "#confect/loads.impl";
+import { offers } from "#confect/offers.impl";
 
 export default Impl.make(api).pipe(
   Layer.provide(carriers),

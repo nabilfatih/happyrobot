@@ -1,10 +1,13 @@
 import { FunctionImpl, GroupImpl } from "@confect/server";
 import { Effect, Layer, Schema } from "effect";
-import { buildDashboardReport } from "../src/domain/metrics";
-import { CallRecord, OfferEvent } from "../src/domain/schemas";
-import api from "./_generated/api";
-import { DatabaseReader } from "./_generated/services";
-import { requireBackendKey, requireDashboardRealtimeToken } from "./backend";
+import { buildDashboardReport } from "#/domain/metrics";
+import { CallRecord, OfferEvent } from "#/domain/schemas";
+import api from "#confect/_generated/api";
+import { DatabaseReader } from "#confect/_generated/services";
+import {
+  requireBackendKey,
+  requireDashboardRealtimeToken,
+} from "#confect/backend";
 
 const report = FunctionImpl.make(api, "dashboard", "report", ({ backendKey }) =>
   Effect.gen(function* () {

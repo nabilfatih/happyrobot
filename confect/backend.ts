@@ -1,11 +1,11 @@
 import { Config, Effect } from "effect";
-import { normalizeMcNumber } from "../src/domain/carriers";
-import { secretsMatch } from "../src/domain/config";
+import { normalizeMcNumber } from "#/domain/carriers";
+import { secretsMatch } from "#/domain/config";
 import {
   BackendAuthError,
   BackendExternalError,
   BackendValidationError,
-} from "./errors";
+} from "#confect/errors";
 
 /** Returns the current Convex function time as an ISO string. */
 export function currentIsoTime() {

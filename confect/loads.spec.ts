@@ -1,6 +1,6 @@
 import { FunctionSpec, GroupSpec } from "@confect/core";
-import { LoadSearchArgs, LoadSearchResponse } from "../src/domain/schemas";
-import { BackendError } from "./errors";
+import { LoadSearchArgs, LoadSearchResponse } from "#/domain/schemas";
+import { BackendError } from "#confect/errors";
 
 export const loads = GroupSpec.make("loads").addFunction(
   FunctionSpec.publicMutation({

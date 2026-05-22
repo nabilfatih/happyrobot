@@ -1,15 +1,15 @@
 import { FunctionImpl, GroupImpl } from "@confect/server";
 import { Effect, Layer } from "effect";
-import { evaluateLoadOffer, explainOfferDecision } from "../src/domain/offers";
-import api from "./_generated/api";
-import { DatabaseReader, DatabaseWriter } from "./_generated/services";
+import { evaluateLoadOffer, explainOfferDecision } from "#/domain/offers";
+import api from "#confect/_generated/api";
+import { DatabaseReader, DatabaseWriter } from "#confect/_generated/services";
 import {
   currentIsoTime,
   requireBackendKey,
   requireBackendMcNumber,
-} from "./backend";
-import { BackendNotFoundError } from "./errors";
-import { seedLoads } from "./load-seed";
+} from "#confect/backend";
+import { BackendNotFoundError } from "#confect/errors";
+import { seedLoads } from "#confect/load-seed";
 
 const evaluate = FunctionImpl.make(api, "offers", "evaluate", (input) =>
   Effect.gen(function* () {

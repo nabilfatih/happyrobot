@@ -3,7 +3,7 @@ import {
   runApi,
   verifyCarrierProgram,
   verifyCarrierQueryProgram,
-} from "@/server/api";
+} from "#/server/api";
 
 export const Route = createFileRoute("/api/carriers/verify")({
   server: {

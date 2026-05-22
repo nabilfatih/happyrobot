@@ -4,7 +4,10 @@
   "packageManager": "pnpm@10.33.0",
   "type": "module",
   "imports": {
-    "#/*": "./src/*"
+    "#/data/loads.json": "./src/data/loads.json",
+    "#/*": "./src/*.ts",
+    "#confect/*": "./confect/*.ts",
+    "#convex/*": "./convex/*.ts"
   },
   "scripts": {
     "dev": "vite dev --port 3000",
