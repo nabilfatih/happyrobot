@@ -117,6 +117,10 @@ function unauthorizedDashboardResponse() {
 
 function setDashboardSecurityHeaders() {
   setResponseHeader("Cache-Control", "private, no-store");
+  setResponseHeader(
+    "Permissions-Policy",
+    securityHeaders["permissions-policy"],
+  );
   setResponseHeader("Referrer-Policy", securityHeaders["referrer-policy"]);
   setResponseHeader(
     "X-Content-Type-Options",
