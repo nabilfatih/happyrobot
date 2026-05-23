@@ -54,16 +54,10 @@ function decodeMaybeJsonString(body: unknown) {
 }
 
 function normalizeHappyRobotOffer(input: HappyRobotOfferEvaluateInput) {
-  const loadId = cleanText(
-    input.loadId ?? input.load_id ?? input.reference_number,
-  );
-  const mcNumber = cleanText(input.mcNumber ?? input.mc_number);
-  const proposedRate =
-    input.proposedRate ??
-    input.proposed_rate ??
-    input.offer_amount ??
-    input.rate;
-  const turn = input.turn ?? input.turn_number ?? input.negotiation_turn ?? 1;
+  const loadId = cleanText(input.reference_number);
+  const mcNumber = cleanText(input.mc_number);
+  const proposedRate = input.offer_amount;
+  const turn = input.turn ?? 1;
 
   if (!loadId || !mcNumber || proposedRate === undefined) {
     return Effect.fail(
@@ -82,7 +76,7 @@ function normalizeHappyRobotOffer(input: HappyRobotOfferEvaluateInput) {
 }
 
 function normalizeHappyRobotCall(input: HappyRobotCallIngestInput) {
-  const mcNumber = cleanText(input.mcNumber ?? input.mc_number);
+  const mcNumber = cleanText(input.mc_number);
 
   if (!mcNumber) {
     return Effect.fail(
@@ -91,24 +85,23 @@ function normalizeHappyRobotCall(input: HappyRobotCallIngestInput) {
   }
 
   const outcome = normalizeOutcome(
-    input.outcome ?? input.classification ?? input.booking_decision,
+    input.classification ?? input.booking_decision,
   );
   const fallbackTransferMocked =
     outcome === "booked" || outcome === "transferred";
 
   return Effect.succeed({
-    agreedRate: input.agreedRate ?? input.agreed_rate,
-    carrierName: cleanText(input.carrierName ?? input.carrier_name),
-    loadId: cleanText(input.loadId ?? input.load_id ?? input.reference_number),
-    loadboardRate: input.loadboardRate ?? input.loadboard_rate,
+    agreedRate: input.agreed_rate,
+    carrierName: cleanText(input.carrier_name),
+    loadId: cleanText(input.reference_number),
+    loadboardRate: input.loadboard_rate,
     mcNumber,
-    negotiationTurns: input.negotiationTurns ?? input.negotiation_turns ?? 0,
+    negotiationTurns: input.negotiation_turns ?? 0,
     offers: [],
     outcome,
-    sentiment: normalizeSentiment(input.sentiment ?? input.sentiment_label),
+    sentiment: normalizeSentiment(input.sentiment),
     summary: callSummary(input),
-    transferMocked:
-      input.transferMocked ?? input.transfer_mocked ?? fallbackTransferMocked,
+    transferMocked: input.transfer_mocked ?? fallbackTransferMocked,
   });
 }
 

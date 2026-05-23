@@ -62,8 +62,16 @@ All HappyRobot-facing endpoints require `x-api-key: HAPPYROBOT_API_KEY`.
 - `POST /api/calls`
 
 The GET routes support HappyRobot webhook nodes. The POST offer and call routes
-accept canonical app payloads plus the HappyRobot aliases used by the live
-workflow.
+accept canonical app payloads plus the explicit HappyRobot JSON contract used by
+the live workflow.
+
+HappyRobot offer webhook fields: `mc_number`, `reference_number`,
+`offer_amount`, `turn`.
+
+HappyRobot call webhook fields: `mc_number`, `classification`,
+`booking_decision`, `decline_reason`, `summary`, `transcript`, `carrier_name`,
+`reference_number`, `loadboard_rate`, `agreed_rate`, `negotiation_turns`,
+`sentiment`, `transfer_mocked`.
 
 The dashboard is served at `/`, protected by HTTP Basic auth, and uses one
 browser-side Convex live query for realtime metrics after the server loader

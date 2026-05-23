@@ -173,7 +173,7 @@ describe("HappyRobot API handlers", () => {
     expect(ingestCall).toHaveBeenCalledOnce();
   });
 
-  it("normalizes HappyRobot call webhook field aliases", async () => {
+  it("normalizes the configured HappyRobot call webhook fields", async () => {
     vi.mocked(ingestCall).mockReturnValue(
       Effect.succeed({ callId: "call-id", stored: true }),
     );
@@ -183,12 +183,18 @@ describe("HappyRobot API handlers", () => {
         jsonRequest(
           "/api/calls",
           {
+            agreed_rate: "2600",
             booking_decision: "accepted",
+            carrier_name: "Road Ready LLC",
             classification: "booked",
             decline_reason: "",
-            duration: 312,
+            loadboard_rate: "2450",
             mc_number: "MC 123456",
+            negotiation_turns: "1",
+            reference_number: "ACME-1001",
+            sentiment: "positive",
             transcript: "Carrier accepted the Dallas to Atlanta load.",
+            transfer_mocked: "true",
           },
           apiKey,
         ),
@@ -197,15 +203,15 @@ describe("HappyRobot API handlers", () => {
 
     expect(response.status).toBe(200);
     expect(ingestCall).toHaveBeenCalledWith({
-      agreedRate: undefined,
-      carrierName: undefined,
-      loadId: undefined,
-      loadboardRate: undefined,
+      agreedRate: 2600,
+      carrierName: "Road Ready LLC",
+      loadId: "ACME-1001",
+      loadboardRate: 2450,
       mcNumber: "MC 123456",
-      negotiationTurns: 0,
+      negotiationTurns: 1,
       offers: [],
       outcome: "booked",
-      sentiment: "neutral",
+      sentiment: "positive",
       summary: "Carrier accepted the Dallas to Atlanta load.",
       transferMocked: true,
     });
@@ -224,7 +230,6 @@ describe("HappyRobot API handlers", () => {
             booking_decision: "yes",
             classification: "no_agreement",
             decline_reason: "",
-            duration: "146",
             mc_number: "42027",
             transcript: [
               { content: "Carrier countered at 2600.", role: "user" },
@@ -281,7 +286,7 @@ describe("HappyRobot API handlers", () => {
     expect(evaluateOffer).toHaveBeenCalledOnce();
   });
 
-  it("normalizes HappyRobot offer webhook field aliases", async () => {
+  it("normalizes the configured HappyRobot offer webhook fields", async () => {
     vi.mocked(evaluateOffer).mockReturnValue(
       Effect.succeed({
         acceptedRate: 2600,
