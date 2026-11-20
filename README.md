@@ -18,11 +18,11 @@ Production dashboard: <https://happyrobot-production-6027.up.railway.app>
 ## Local Setup
 
 ```bash
-pnpm install
-pnpm confect:codegen
+bun install
+bun run confect:codegen
 cp .env.example .env.local
-pnpm convex:dev
-pnpm dev
+bun run convex:dev
+bun run dev
 ```
 
 Railway/server env:
@@ -43,10 +43,10 @@ Convex env:
 ## Scripts
 
 ```bash
-pnpm test
-pnpm typecheck
-pnpm check
-pnpm build
+bun run test
+bun run typecheck
+bun run check
+bun run build
 ```
 
 ## API

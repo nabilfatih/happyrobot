@@ -7,13 +7,13 @@ RUN apt-get update \
   && apt-get install -y --no-install-recommends ca-certificates \
   && rm -rf /var/lib/apt/lists/*
 
-RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
+COPY --from=oven/bun:1.4.4 /usr/local/bin/bun /usr/local/bin/bun
 
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-RUN pnpm install --frozen-lockfile
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile
 
 COPY . .
-RUN pnpm build
+RUN bun run build
 
 FROM node:22-bookworm-slim AS runtime
 
